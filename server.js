@@ -3,9 +3,13 @@ var satic = require('node-static'),
   http = require('http'),
   podiumId = process.argv[2];
 
+  //Example: node server.js GNF9426/nb-no [web_folder]
+  // Give the gnfid and lang separated by /
+  // A folder to where the web files are located can be added, if not supplied, current folder will be default
+
 http.createServer(function (request, response) {
   if(request.url === '/FlashXml.xml' || request.url === '/podiumdata.json'){
-    var options = { host: 'www.aftenposten.no',  port: 80,  path: '/external/eavis/eavis_150.jpg',  method: 'GET' };    
+    var options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin/GNF/Content/' + podiumId + request.url,  method: 'GET' };   
     var proxy_request = http.request(options);
     proxy_request.addListener('response', function (proxy_response) {
       proxy_response.addListener('data', function(chunk) {

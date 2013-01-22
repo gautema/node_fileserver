@@ -3,7 +3,7 @@ var satic = require('node-static'),
   http = require('http'),
   podiumId = process.argv[2];
 
-  //Example: node server.js GNF9426/nb-no [web_folder]
+  //Example: node server.js GNF9426/nb-no [web_folder] [port]
   // Give the gnfid and lang separated by /
   // A folder to where the web files are located can be added, if not supplied, current folder will be default
 
@@ -28,4 +28,4 @@ http.createServer(function (request, response) {
       file.serve(request, response);
     });
   }
-}).listen(8888);
+}).listen(process.argv[4] || 8888);

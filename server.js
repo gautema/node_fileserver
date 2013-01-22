@@ -7,10 +7,8 @@ var satic = require('node-static'),
   // Give the gnfid and lang separated by /
   // A folder to where the web files are located can be added, if not supplied, current folder will be default
 
-http.createServer(function (request, response) {
-  if(request.url === '/FlashXml.xml' || request.url === '/podiumdata.json'){
-    var options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin/GNF/Content/' + podiumId + request.url,  method: 'GET' };   
-    var proxy_request = http.request(options);
+var proxy = function(request, response, options){
+  var proxy_request = http.request(options);
     proxy_request.addListener('response', function (proxy_response) {
       proxy_response.addListener('data', function(chunk) {
         response.write(chunk, 'binary');
@@ -23,6 +21,17 @@ http.createServer(function (request, response) {
     request.addListener('end', function() {
       proxy_request.end();
     });
+};
+
+
+http.createServer(function (request, response) {
+  if(request.url.substring(0,8) === '/Content'){
+    var options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin' + request.url,  method: 'GET' };
+    proxy(request, response, options);
+
+  }else if(request.url === '/FlashXml.xml' || request.url === '/podiumdata.json'){
+    var options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin/GNF/Content/' + podiumId + request.url,  method: 'GET' }; 
+    proxy(request, response, options);
   }else{
     request.addListener('end', function () {
       file.serve(request, response);

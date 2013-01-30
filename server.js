@@ -25,12 +25,13 @@ var proxy = function(request, response, options){
 
 
 http.createServer(function (request, response) {
+  var options;
   if(request.url.substring(0,8) === '/Content'){
-    var options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin' + request.url,  method: 'GET' };
+    options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin' + request.url,  method: 'GET' };
     proxy(request, response, options);
 
   }else if(request.url === '/FlashXml.xml' || request.url === '/podiumdata.json'){
-    var options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin/GNF/Content/' + podiumId + request.url,  method: 'GET' }; 
+    options = { host: 'digital.gyldendal.no',  port: 80,  path: '/PodiumAdmin/GNF/Content/' + podiumId + request.url,  method: 'GET' };
     proxy(request, response, options);
   }else{
     request.addListener('end', function () {
